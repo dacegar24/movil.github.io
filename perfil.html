@@ -1,0 +1,109 @@
+<!-- Página de perfil de usuario: muestra y permite editar la información del usuario -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil de Usuario - Charity</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .btn-cerrar-sesion {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: background 0.2s;
+      display: block;
+      width: 200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .btn-cerrar-sesion:hover {
+      background: #ff5252;
+    }
+    
+    .btn-configuracion {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: background 0.2s;
+      display: block;
+      width: 200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .btn-configuracion:hover {
+      background: var(--primary-dark);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Mi Perfil</h2>
+  </header>
+
+  <main class="perfil-container" id="perfil-container">
+    <img src="images/user.png" alt="Foto de perfil" class="perfil-foto" id="foto-perfil" />
+    <h3 id="nombre-usuario">Nombre del usuario</h3>
+    <p id="correo-usuario">Correo: </p>
+    <p id="miembro-desde">Miembro desde: Junio 2025</p>
+    <p id="publicaciones-usuario">Publicaciones: 8</p>
+    <p id="ciudad-usuario">Ciudad: </p>
+    <p id="telefono-usuario">Teléfono: </p>
+    <p id="sexo-usuario">Sexo: </p>
+    <p id="nacimiento-usuario">Fecha de nacimiento: </p>
+    <p id="experiencia-usuario">Experiencia laboral: </p>
+    <p id="estudios-usuario">Estudios: </p>
+    <button onclick="location.href='configuracion.html'" class="btn-configuracion">
+  ⚙ Editar perfil
+</button>
+
+    <button onclick="cerrarSesion()" class="btn-cerrar-sesion">
+      🚪 Cerrar Sesión
+    </button>
+
+  <footer>
+    <button onclick="location.href='home.html'">Inicio</button>
+    <button onclick="location.href='mensajes.html'">Mensajes</button>
+    <button>Perfil</button>
+  </footer>
+
+  <script>
+    function cerrarSesion() {
+      // Limpiar todos los datos de sesión
+      localStorage.removeItem('usuarioActual');
+      localStorage.removeItem('sesionUsuario');
+      sessionStorage.clear();
+      
+      // Redirigir directamente a la página de login
+      location.href = 'login.html';
+    }
+
+    // Cargar datos del perfil desde localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      const datos = JSON.parse(localStorage.getItem('perfilUsuario') || '{}');
+      if (datos) {
+        document.getElementById('nombre-usuario').textContent = `${datos.nombre || ''} ${datos.apellidoPaterno || ''} ${datos.apellidoMaterno || ''}`.trim() || 'Nombre del usuario';
+        document.getElementById('correo-usuario').textContent = 'Correo: ' + (datos.correo || '');
+        document.getElementById('ciudad-usuario').textContent = 'Ciudad: ' + (datos.ciudad || '');
+        document.getElementById('telefono-usuario').textContent = 'Teléfono: ' + (datos.telefono || '');
+        document.getElementById('sexo-usuario').textContent = 'Sexo: ' + (datos.sexo ? datos.sexo.charAt(0).toUpperCase() + datos.sexo.slice(1) : '');
+        document.getElementById('nacimiento-usuario').textContent = 'Fecha de nacimiento: ' + (datos.nacimiento || '');
+        document.getElementById('experiencia-usuario').textContent = 'Experiencia laboral: ' + (datos.experiencia || '');
+        document.getElementById('estudios-usuario').textContent = 'Estudios: ' + (datos.estudios || '');
+      }
+    });
+  </script>
+</body>
+</html>

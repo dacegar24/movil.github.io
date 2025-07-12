@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inicio - Charity</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* 
+     * PÁGINA PRINCIPAL - HOME.HTML
+     * 
+     * Esta página muestra todas las publicaciones de trabajo disponibles.
+     * Incluye un buscador funcional y filtros avanzados para encontrar
+     * publicaciones específicas.
+     */
+
+    /* Contenedor principal de publicaciones */
+    .post-container {
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 48px 0;
+    }
+
+    /* Tarjetas individuales de publicaciones */
+    .post {
+      background-color: var(--card-bg);
+      padding: 56px 64px;
+      border-radius: 32px;
+      box-shadow: 0 12px 48px rgba(255,179,71,0.15);
+      border: 2px solid var(--border);
+      position: relative;
+      font-size: 1.25rem;
+      transition: box-shadow 0.2s, transform 0.2s;
+      min-width: 0;
+      animation: fadeUpCard 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Títulos de las publicaciones */
+    .post h3 {
+      font-size: 1.7rem;
+      color: var(--primary-dark);
+      margin-bottom: 22px;
+      font-weight: 700;
+    }
+
+    /* Texto de las publicaciones */
+    .post p {
+      margin: 18px 0;
+      font-size: 1.22rem;
+      color: var(--text-main);
+    }
+
+    /* Imágenes en las publicaciones */
+    .post img {
+      max-width: 100%;
+      height: auto;
+      max-height: 420px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin: 24px 0;
+      box-shadow: 0 4px 18px rgba(255,179,71,0.13);
+    }
+
+    /* Botones de interacción (like y comentarios) */
+    .btn-like, .btn-toggle-comments {
+      font-size: 1.18rem;
+      padding: 14px 32px;
+      border-radius: 12px;
+      margin-right: 14px;
+      margin-top: 16px;
+    }
+
+    /* Sección de comentarios */
+    .comment-section {
+      margin-top: 24px;
+      padding: 22px 28px;
+      background: #fff3cd;
+      border-radius: 16px;
+      border: 1.5px solid var(--border);
+    }
+
+    .comment-list p {
+      font-size: 1.08rem;
+      margin-bottom: 10px;
+    }
+
+    /* Campo de entrada para comentarios */
+    .comment-input {
+      width: 100%;
+      padding: 14px 18px;
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 1.08rem;
+      background: #fff3cd;
+      color: var(--text-main);
+    }
+
+    .btn-add-comment {
+      margin-top: 14px;
+      padding: 12px 28px;
+      font-size: 1.08rem;
+      border-radius: 10px;
+    }
+    
+    /* 
+     * SISTEMA DE BÚSQUEDA Y FILTROS
+     * 
+     * Contiene el buscador principal y el panel de filtros avanzados
+     */
+    
+    /* Contenedor del buscador */
+    .search-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 600px;
+    }
+    
+    /* Barra de búsqueda mejorada */
+    .search-bar {
+      flex: 1;
+      padding: 12px 20px;
+      border: 2px solid var(--border);
+      border-radius: 25px;
+      font-size: 1rem;
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    
+    .search-bar:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    /* Botón de búsqueda */
+    .btn-search {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      white-space: nowrap;
+    }
+    
+    .btn-search:hover {
+      background: #1d4ed8;
+      transform: scale(1.05);
+    }
+    
+    .btn-search:active {
+      transform: scale(0.95);
+    }
+    
+    /* Botón de filtros */
+    .btn-filter {
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    
+    .btn-filter:hover {
+      background: #5a6268;
+    }
+    
+    /* Panel de filtros desplegable */
+    .filtros-panel {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin: 16px auto;
+      max-width: 800px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      animation: slideDown 0.3s ease-out;
+    }
+    
+    .filtros-content {
+      padding: 24px;
+    }
+    
+    .filtros-content h3 {
+      color: #1d4ed8;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.3rem;
+    }
+    
+    /* Grupos de filtros individuales */
+    .filtro-grupo {
+      margin-bottom: 16px;
+    }
+    
+    .filtro-grupo label {
+      display: block;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+    
+    .filtro-select, .filtro-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+    
+    .filtro-select:focus, .filtro-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    /* Botones de aplicar y limpiar filtros */
+    .filtros-botones {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    
+    .btn-aplicar-filtros, .btn-limpiar-filtros {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .btn-aplicar-filtros {
+      background: #2563eb;
+      color: white;
+    }
+    
+    .btn-aplicar-filtros:hover {
+      background: #1d4ed8;
+    }
+    
+    .btn-limpiar-filtros {
+      background: #6c757d;
+      color: white;
+    }
+    
+    .btn-limpiar-filtros:hover {
+      background: #5a6268;
+    }
+    
+    /* Animación para el panel de filtros */
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Información de resultados de búsqueda */
+    .resultados-info {
+      text-align: center;
+      padding: 16px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin: 16px auto;
+      max-width: 800px;
+    }
+
+    /* Responsive design para diferentes tamaños de pantalla */
+    @media (max-width: 1100px) {
+      .post-container {
+        max-width: 99vw;
+        padding: 24px 0;
+      }
+      .post {
+        padding: 32px 4vw;
+      }
+    }
+    @media (max-width: 700px) {
+      .post {
+        padding: 18px 2vw;
+        border-radius: 14px;
+      }
+      .post h3 {
+        font-size: 1.15rem;
+      }
+      .post p {
+        font-size: 1rem;
+      }
+      .btn-like, .btn-toggle-comments, .btn-add-comment {
+        font-size: 0.98rem;
+        padding: 8px 10px;
+      }
+      .comment-section {
+        padding: 10px 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Página principal (home): muestra el feed y navegación principal -->
+  <!-- Header con buscador y filtros -->
+  <header>
+    <span class="time" id="hora-actual">00:00</span>
+    <div class="search-container">
+      <input class="search-bar" id="search-input" placeholder="Buscar publicaciones..." />
+      <button class="btn-search" onclick="realizarBusqueda()">🔍 Buscar</button>
+      <button class="btn-filter" onclick="toggleFiltros()">⚙️ Filtros</button>
+    </div>
+  </header>
+
+  <!-- Panel de filtros avanzados -->
+  <div class="filtros-panel" id="filtros-panel" style="display: none;">
+    <div class="filtros-content">
+      <h3>Filtros de Búsqueda</h3>
+      
+      <!-- Filtro por oficio -->
+      <div class="filtro-grupo">
+        <label>Oficio:</label>
+        <select id="filtro-oficio" class="filtro-select">
+          <option value="">Todos los oficios</option>
+          <option value="plomero">Plomero</option>
+          <option value="electricista">Electricista</option>
+          <option value="pintor">Pintor</option>
+          <option value="jardinero">Jardinero</option>
+          <option value="albañil">Albañil</option>
+          <option value="carpintero">Carpintero</option>
+          <option value="mecanico">Mecánico</option>
+          <option value="limpieza">Limpieza</option>
+          <option value="otros">Otros</option>
+        </select>
+      </div>
+
+      <!-- Filtro por ciudad -->
+      <div class="filtro-grupo">
+        <label>Ciudad:</label>
+        <input type="text" id="filtro-ciudad" class="filtro-input" placeholder="Buscar por ciudad...">
+      </div>
+
+      <!-- Filtro por experiencia -->
+      <div class="filtro-grupo">
+        <label>Experiencia:</label>
+        <select id="filtro-experiencia" class="filtro-select">
+          <option value="">Cualquier experiencia</option>
+          <option value="principiante">Principiante</option>
+          <option value="intermedio">Intermedio</option>
+          <option value="experto">Experto</option>
+        </select>
+      </div>
+
+      <!-- Filtro por estudios -->
+      <div class="filtro-grupo">
+        <label>Estudios:</label>
+        <select id="filtro-estudios" class="filtro-select">
+          <option value="">Cualquier nivel</option>
+          <option value="primaria">Primaria</option>
+          <option value="secundaria">Secundaria</option>
+          <option value="preparatoria">Preparatoria</option>
+          <option value="universidad">Universidad</option>
+          <option value="tecnico">Técnico</option>
+        </select>
+      </div>
+
+      <!-- Ordenamiento de resultados -->
+      <div class="filtro-grupo">
+        <label>Ordenar por:</label>
+        <select id="filtro-orden" class="filtro-select">
+          <option value="fecha">Más recientes</option>
+          <option value="likes">Más populares</option>
+          <option value="alfabetico">Alfabético</option>
+        </select>
+      </div>
+
+      <!-- Botones de acción para filtros -->
+      <div class="filtros-botones">
+        <button class="btn-aplicar-filtros" onclick="aplicarFiltros()">Aplicar Filtros</button>
+        <button class="btn-limpiar-filtros" onclick="limpiarFiltros()">Limpiar Filtros</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor principal de publicaciones -->
+  <main>
+    <div class="post-container">
+      <!-- Las publicaciones se cargan dinámicamente aquí -->
+    </div>
+  </main>
+
+  <!-- Navegación inferior -->
+  <footer class="bottom-nav">
+    <button onclick="location.href='home.html'">Inicio</button>
+    <button onclick="location.href='mensajes.html'">Mensajes</button>
+    <button onclick="location.href='nueva-publicacion.html'">Nueva Publicación</button>
+    <button onclick="location.href='perfil.html'">Perfil</button>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    /*
+     * FUNCIONALIDAD DE BÚSQUEDA Y FILTROS
+     * 
+     * Este script maneja toda la lógica de búsqueda, filtrado
+     * y visualización de publicaciones en la página principal.
+     */
+
+    // Variables globales para el sistema de filtros
+    let publicacionesOriginales = [];
+    let filtrosActivos = {
+      busqueda: '',
+      oficio: '',
+      ciudad: '',
+      experiencia: '',
+      estudios: '',
+      orden: 'fecha'
+    };
+
+    /**
+     * Carga las publicaciones desde localStorage y las muestra
+     */
+    function cargarPublicaciones() {
+      let publicaciones = JSON.parse(localStorage.getItem('publicaciones') || '[]');
+      
+      // Si no hay publicaciones, crear 3 de ejemplo
+      if (publicaciones.length === 0) {
+        publicaciones = [
+          {
+            nombreCompleto: 'Juan Pérez',
+            oficio: 'Plomero',
+            descripcion: 'Servicios de plomería profesional, reparación de tuberías y instalaciones sanitarias. Más de 5 años de experiencia.',
+            lugar: 'Tula de Allende, Hidalgo',
+            fecha: '15/12/2024, 10:30',
+            likes: 5,
+            comentarios: ['Excelente trabajo', 'Muy profesional'],
+            imagen: null,
+            fotoPerfil: 'images/user.png'
+          },
+          {
+            nombreCompleto: 'María García',
+            oficio: 'Electricista',
+            descripcion: 'Instalaciones eléctricas residenciales y comerciales, mantenimiento preventivo y reparaciones urgentes.',
+            lugar: 'Tula de Allende, Hidalgo',
+            fecha: '14/12/2024, 15:45',
+            likes: 8,
+            comentarios: ['Muy confiable', 'Precios justos'],
+            imagen: null,
+            fotoPerfil: 'images/user.png'
+          },
+          {
+            nombreCompleto: 'Carlos López',
+            oficio: 'Pintor',
+            descripcion: 'Pintura interior y exterior, acabados finos, trabajos de calidad garantizada. Presupuestos sin compromiso.',
+            lugar: 'Tula de Allende, Hidalgo',
+            fecha: '13/12/2024, 09:15',
+            likes: 12,
+            comentarios: ['Hermoso trabajo', 'Recomendado'],
+            imagen: null,
+            fotoPerfil: 'images/user.png'
+          }
+        ];
+        
+        // Guardar las publicaciones en localStorage
+        localStorage.setItem('publicaciones', JSON.stringify(publicaciones));
+      }
+      
+      publicacionesOriginales = [...publicaciones];
+      mostrarPublicacionesFiltradas();
+    }
+
+    /**
+     * Muestra las publicaciones aplicando los filtros activos
+     */
+    function mostrarPublicacionesFiltradas() {
+      let publicacionesFiltradas = [...publicacionesOriginales];
+      
+      // Aplicar filtro de búsqueda por texto
+      if (filtrosActivos.busqueda && filtrosActivos.busqueda.trim() !== '') {
+        const busqueda = filtrosActivos.busqueda.toLowerCase().trim();
+        publicacionesFiltradas = publicacionesFiltradas.filter(pub => {
+          // Buscar en múltiples campos
+          const oficio = (pub.oficio || '').toLowerCase();
+          const descripcion = (pub.descripcion || '').toLowerCase();
+          const lugar = (pub.lugar || '').toLowerCase();
+          const nombreCompleto = (pub.nombreCompleto || '').toLowerCase();
+          
+          return oficio.includes(busqueda) ||
+                 descripcion.includes(busqueda) ||
+                 lugar.includes(busqueda) ||
+                 nombreCompleto.includes(busqueda);
+        });
+      }
+      
+      // Aplicar filtro de oficio específico
+      if (filtrosActivos.oficio && filtrosActivos.oficio.trim() !== '') {
+        publicacionesFiltradas = publicacionesFiltradas.filter(pub => 
+          (pub.oficio || '').toLowerCase() === filtrosActivos.oficio.toLowerCase()
+        );
+      }
+      
+      // Aplicar filtro de ciudad
+      if (filtrosActivos.ciudad && filtrosActivos.ciudad.trim() !== '') {
+        publicacionesFiltradas = publicacionesFiltradas.filter(pub => 
+          (pub.lugar || '').toLowerCase().includes(filtrosActivos.ciudad.toLowerCase())
+        );
+      }
+      
+      // Ordenar resultados según el criterio seleccionado
+      switch (filtrosActivos.orden) {
+        case 'likes':
+          publicacionesFiltradas.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+          break;
+        case 'alfabetico':
+          publicacionesFiltradas.sort((a, b) => (a.oficio || '').localeCompare(b.oficio || ''));
+          break;
+        case 'fecha':
+        default:
+          // Mantener orden original (más recientes primero)
+          break;
+      }
+      
+      const container = document.querySelector('.post-container');
+      
+      // Mostrar información de resultados
+      const resultadosInfo = document.getElementById('resultados-info');
+      if (!resultadosInfo) {
+        const infoDiv = document.createElement('div');
+        infoDiv.id = 'resultados-info';
+        infoDiv.className = 'resultados-info';
+        container.parentNode.insertBefore(infoDiv, container);
+      }
+      
+      const infoDiv = document.getElementById('resultados-info');
+      
+      // Mostrar mensaje cuando no hay publicaciones
+      if (publicacionesOriginales.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 48px; color: var(--text-main);"><h3>No hay publicaciones aún</h3><p>¡Sé el primero en crear una publicación!</p></div>';
+        infoDiv.innerHTML = 'No hay publicaciones disponibles';
+        return;
+      }
+      
+      // Mostrar resultados de búsqueda
+      if (publicacionesFiltradas.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 48px; color: var(--text-main);"><h3>No se encontraron publicaciones</h3><p>Intenta ajustar los filtros de búsqueda</p></div>';
+        infoDiv.innerHTML = `Mostrando 0 de ${publicacionesOriginales.length} publicaciones`;
+      } else {
+        infoDiv.innerHTML = `Mostrando ${publicacionesFiltradas.length} de ${publicacionesOriginales.length} publicaciones`;
+        container.innerHTML = '';
+        
+        // Crear elementos HTML para cada publicación
+        publicacionesFiltradas.forEach((publicacion, index) => {
+          const postDiv = document.createElement('div');
+          postDiv.className = 'post';
+          
+          let imagenHTML = '';
+          if (publicacion.imagen) {
+            imagenHTML = `<img src="${publicacion.imagen}" alt="Imagen de la publicación" />`;
+          }
+          
+          // Foto de perfil y nombre del usuario
+          let perfilHTML = `<div style='display: flex; align-items: center; gap: 12px; margin-bottom: 8px;'>
+            <img src='${publicacion.fotoPerfil || "images/user.png"}' alt='Foto de perfil' style='width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid #eee;'>
+            <span style='font-weight:600;'>${publicacion.nombreCompleto || 'Usuario'}</span> · <span style='color:#888; font-size:0.98em;'>${publicacion.fecha}</span>
+          </div>`;
+          
+          // Generar HTML de la publicación
+          postDiv.innerHTML = `
+            ${perfilHTML}
+            ${imagenHTML}
+            <p><strong>Oficio:</strong> ${publicacion.oficio || 'No especificado'}</p>
+            <p><strong>Descripción:</strong> ${publicacion.descripcion || 'Sin descripción'}</p>
+            <p><strong>Lugar:</strong> ${publicacion.lugar || 'No especificado'}</p>
+            <button class="btn-like" onclick="darLike(${publicacionesOriginales.indexOf(publicacion)})">❤️ <span class="like-count">${publicacion.likes || 0}</span> Me gusta</button>
+            <button class="btn-toggle-comments" onclick="toggleComentarios(${index})">💬 <span class="comment-count">${(publicacion.comentarios || []).length}</span> Comentarios</button>
+            <div class="comment-section" style="display: none;">
+              <div class="comment-list" id="comments-${index}">
+                ${(publicacion.comentarios || []).map(comentario => `<p><strong>Usuario:</strong> ${comentario}</p>`).join('')}
+              </div>
+              <input type="text" class="comment-input" placeholder="Escribe un comentario..." id="comment-input-${index}" />
+              <button class="btn-add-comment" onclick="agregarComentario(${publicacionesOriginales.indexOf(publicacion)})">Enviar</button>
+            </div>
+          `;
+          
+          container.appendChild(postDiv);
+        });
+      }
+    }
+
+    /**
+     * Muestra u oculta el panel de filtros
+     */
+    function toggleFiltros() {
+      const panel = document.getElementById('filtros-panel');
+      const btnFilter = document.querySelector('.btn-filter');
+      
+      if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        btnFilter.textContent = '❌ Cerrar';
+        btnFilter.style.background = '#dc3545';
+      } else {
+        panel.style.display = 'none';
+        btnFilter.textContent = '⚙️ Filtros';
+        btnFilter.style.background = 'var(--primary)';
+      }
+    }
+
+    /**
+     * Aplica los filtros seleccionados
+     */
+    function aplicarFiltros() {
+      filtrosActivos.busqueda = document.getElementById('search-input').value;
+      filtrosActivos.oficio = document.getElementById('filtro-oficio').value;
+      filtrosActivos.ciudad = document.getElementById('filtro-ciudad').value;
+      filtrosActivos.experiencia = document.getElementById('filtro-experiencia').value;
+      filtrosActivos.estudios = document.getElementById('filtro-estudios').value;
+      filtrosActivos.orden = document.getElementById('filtro-orden').value;
+      
+      mostrarPublicacionesFiltradas();
+      
+      // Cerrar panel de filtros
+      toggleFiltros();
+    }
+
+    /**
+     * Limpia todos los filtros aplicados
+     */
+    function limpiarFiltros() {
+      document.getElementById('search-input').value = '';
+      document.getElementById('filtro-oficio').value = '';
+      document.getElementById('filtro-ciudad').value = '';
+      document.getElementById('filtro-experiencia').value = '';
+      document.getElementById('filtro-estudios').value = '';
+      document.getElementById('filtro-orden').value = 'fecha';
+      
+      filtrosActivos = {
+        busqueda: '',
+        oficio: '',
+        ciudad: '',
+        experiencia: '',
+        estudios: '',
+        orden: 'fecha'
+      };
+      
+      mostrarPublicacionesFiltradas();
+    }
+
+    /**
+     * Realiza una búsqueda explícita con el botón
+     */
+    function realizarBusqueda() {
+      const searchInput = document.getElementById('search-input');
+      filtrosActivos.busqueda = searchInput.value;
+      mostrarPublicacionesFiltradas();
+      
+      // Efecto visual de confirmación
+      const btnSearch = document.querySelector('.btn-search');
+      btnSearch.style.background = '#28a745';
+      btnSearch.textContent = '✅ Buscado';
+      
+      setTimeout(() => {
+        btnSearch.style.background = 'var(--primary)';
+        btnSearch.textContent = '🔍 Buscar';
+      }, 1000);
+    }
+
+    /**
+     * Incrementa el contador de likes de una publicación
+     */
+    function darLike(index) {
+      const publicaciones = JSON.parse(localStorage.getItem('publicaciones') || '[]');
+      publicaciones[index].likes++;
+      localStorage.setItem('publicaciones', JSON.stringify(publicaciones));
+      cargarPublicaciones();
+    }
+    
+    /**
+     * Muestra u oculta la sección de comentarios
+     */
+    function toggleComentarios(index) {
+      const commentSection = document.querySelector(`#comments-${index}`).parentElement;
+      commentSection.style.display = commentSection.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    /**
+     * Agrega un nuevo comentario a una publicación
+     */
+    function agregarComentario(index) {
+      const input = document.getElementById(`comment-input-${index}`);
+      const comentario = input.value.trim();
+      
+      if (comentario) {
+        const publicaciones = JSON.parse(localStorage.getItem('publicaciones') || '[]');
+        publicaciones[index].comentarios.push(comentario);
+        localStorage.setItem('publicaciones', JSON.stringify(publicaciones));
+        input.value = '';
+        cargarPublicaciones();
+      }
+    }
+
+    // Inicialización cuando se carga la página
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('search-input');
+      
+      // Búsqueda en tiempo real mientras se escribe
+      searchInput.addEventListener('input', function() {
+        filtrosActivos.busqueda = this.value;
+        mostrarPublicacionesFiltradas();
+      });
+      
+      // Permitir búsqueda con la tecla Enter
+      searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          realizarBusqueda();
+        }
+      });
+      
+      // Cargar publicaciones iniciales
+      cargarPublicaciones();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Charity - Encuentra tu trabajo deseado</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /*
+     * PÁGINA PRINCIPAL DE CHARITY
+     * 
+     * Esta página muestra el título principal y opciones de autenticación.
+     * Incluye botones para iniciar sesión y registrarse.
+     */
+
+    /* Contenedor principal de la página */
+    body {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+    }
+
+    /* Título principal de la aplicación */
+    .app-title {
+      text-align: center;
+      color: white;
+      font-size: 4.5rem;
+      font-weight: 700;
+      margin-bottom: 50px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      animation: fadeInDown 0.8s ease-out;
+      line-height: 1.2;
+      max-width: 800px;
+    }
+
+    /* Contenedor de botones */
+    .buttons-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 30px;
+      animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+
+    /* Botones principales */
+    .btn-login, .btn-register {
+      width: 280px;
+      padding: 18px 30px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn-login {
+      background: white;
+      color: var(--primary-dark);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-login:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-register {
+      background: transparent;
+      color: white;
+      border: 3px solid white;
+    }
+
+    .btn-register:hover {
+      background: white;
+      color: var(--primary-dark);
+      transform: translateY(-3px);
+    }
+
+    /* Sección de formulario (inicialmente oculta) */
+    .form-section {
+      display: none;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    .form-title {
+      font-size: 1.8rem;
+      color: var(--primary-dark);
+      margin-bottom: 30px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .auth-form label {
+      font-weight: 600;
+      color: var(--text-main);
+      text-align: left;
+      margin-bottom: 5px;
+    }
+
+    .auth-form input {
+      padding: 15px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .auth-form input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .btn-auth {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 10px;
+    }
+
+    .btn-auth:hover {
+      background: var(--primary-dark);
+    }
+
+    .auth-link {
+      text-align: center;
+      margin-top: 20px;
+      color: var(--text-main);
+    }
+
+    .auth-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .auth-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* Botón de regreso */
+    .btn-back {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-back:hover {
+      background: white;
+      color: var(--primary-dark);
+    }
+
+    /* Animaciones */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .app-title {
+        font-size: 3rem;
+        margin-bottom: 40px;
+      }
+      
+      .btn-login, .btn-register {
+        width: 250px;
+        padding: 16px 25px;
+        font-size: 1.1rem;
+      }
+      
+      .form-section {
+        padding: 30px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .app-title {
+        font-size: 2.5rem;
+        margin-bottom: 30px;
+      }
+      
+      .btn-login, .btn-register {
+        width: 220px;
+        padding: 14px 20px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Página de login: permite a los usuarios iniciar sesión -->
+  <!-- Título principal -->
+  <h1 class="app-title">Encuentra tu trabajo deseado</h1>
+  
+  <!-- Botones de navegación -->
+  <div class="buttons-container" id="nav-buttons">
+    <a href="iniciar-sesion.html" class="btn-login">Iniciar Sesión</a>
+    <a href="registro.html" class="btn-register">Registrarse</a>
+  </div>
+
+  <!-- Formulario de Login -->
+  <div class="form-section" id="login-form">
+    <h2 class="form-title">Iniciar Sesión</h2>
+    
+    <form class="auth-form" onsubmit="event.preventDefault(); iniciarSesion()">
+      <label for="correo">Correo electrónico</label>
+      <input type="email" id="correo" placeholder="ejemplo@correo.com" required />
+      
+      <label for="contrasena">Contraseña</label>
+      <input type="password" id="contrasena" placeholder="••••••••" required />
+      
+      <button type="submit" class="btn-auth">Iniciar Sesión</button>
+      
+      <p class="auth-link">
+        ¿No tienes cuenta?
+        <a href="registro.html">Regístrate aquí</a>
+      </p>
+    </form>
+    
+    <button class="btn-back" onclick="ocultarFormulario()">← Volver</button>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    /*
+     * FUNCIONALIDAD DE LA PÁGINA PRINCIPAL
+     * 
+     * Este script maneja la navegación entre el menú principal
+     * y el formulario de login.
+     */
+
+    /**
+     * Muestra el formulario de login y oculta los botones principales
+     */
+    function mostrarFormulario(tipo) {
+      const navButtons = document.getElementById('nav-buttons');
+      const loginForm = document.getElementById('login-form');
+      
+      if (tipo === 'login') {
+        navButtons.style.display = 'none';
+        loginForm.classList.add('active');
+      }
+    }
+
+    /**
+     * Oculta el formulario y muestra los botones principales
+     */
+    function ocultarFormulario() {
+      const navButtons = document.getElementById('nav-buttons');
+      const loginForm = document.getElementById('login-form');
+      
+      navButtons.style.display = 'flex';
+      loginForm.classList.remove('active');
+    }
+
+    /**
+     * Maneja el proceso de inicio de sesión
+     */
+    function iniciarSesion() {
+      const correo = document.getElementById('correo').value;
+      const contrasena = document.getElementById('contrasena').value;
+      
+      if (correo && contrasena) {
+        // Simular inicio de sesión exitoso
+        localStorage.setItem('usuarioActual', correo);
+        alert('¡Inicio de sesión exitoso!');
+        location.href = 'home.html';
+      } else {
+        alert('Por favor completa todos los campos');
+      }
+    }
+
+    // Inicialización cuando se carga la página
+    document.addEventListener('DOMContentLoaded', function() {
+      // Verificar si ya hay una sesión activa
+      const sesionUsuario = obtenerDeStorage('sesionUsuario');
+      if (sesionUsuario && sesionUsuario.autenticado) {
+        // Si ya está autenticado, redirigir a home
+        window.location.href = 'home.html';
+      }
+    });
+  </script>
+</body>
+</html>
